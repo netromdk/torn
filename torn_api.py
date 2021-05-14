@@ -94,3 +94,19 @@ Fields: applications, detailed, employees, news, newsfull, profile, stock, times
       url += company_id
     resp = requests.get(url, params=params)
     return resp.json()
+
+  def market(self, item_id=None, fields=None):
+    """Fetch item market information.
+
+Fields: bazaar, itemmarket, pointsmarket, timestamp
+    """
+    fields = fields or []
+    params = {
+      "key": self.__key,
+      "selections": ",".join(fields),
+    }
+    url = "{}/market/".format(self.__base_url)
+    if item_id:
+      url += item_id
+    resp = requests.get(url, params=params)
+    return resp.json()
