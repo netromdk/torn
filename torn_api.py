@@ -17,20 +17,7 @@ display, education, events, gym, hof, honors, icons, inventory, jobpoints, log, 
 messages, money, networth, notifications, perks, personalstats, profile, properties, receivedevents,
 refills, reports, revives, revivesfull, skills, stocks, timestamp, travel, weaponexp, workstats
     """
-    fields = fields or []
-    params = {
-      "key": self.__key,
-      "selections": ",".join(fields),
-    }
-    if since:
-      params["from"] = str(int(since))
-    if until:
-      params["to"] = str(int(until))
-    url = "{}/user/".format(self.__base_url)
-    if user_id:
-      url += user_id
-    resp = requests.get(url, params=params)
-    return resp.json()
+    return self.__get("user", user_id, fields, since, until)
 
   def property(self, property_id=None, fields=None):
     """Fetch property information.
@@ -39,16 +26,7 @@ If property ID is unspecified, the property related to the API key is used.
 
 Fields: property, timestamp
     """
-    fields = fields or []
-    params = {
-      "key": self.__key,
-      "selections": ",".join(fields),
-    }
-    url = "{}/property/".format(self.__base_url)
-    if property_id:
-      url += property_id
-    resp = requests.get(url, params=params)
-    return resp.json()
+    return self.__get("property", property_id, fields)
 
   def faction(self, faction_id=None, fields=None, since=None, until=None):
     """Fetch faction information.
@@ -62,20 +40,7 @@ chain, chains, contributors, crimenews, crimes, currency, donations, drugs, fund
 medical, membershipnews, reports, revives, revivesfull, stats, temporary, territory, timestamp,
 upgrades, weapons
     """
-    fields = fields or []
-    params = {
-      "key": self.__key,
-      "selections": ",".join(fields),
-    }
-    if since:
-      params["from"] = str(int(since))
-    if until:
-      params["to"] = str(int(until))
-    url = "{}/faction/".format(self.__base_url)
-    if faction_id:
-      url += faction_id
-    resp = requests.get(url, params=params)
-    return resp.json()
+    return self.__get("faction", faction_id, fields, since, until)
 
   def company(self, company_id=None, fields=None):
     """Fetch company information.
@@ -84,32 +49,14 @@ If company ID is unspecified, the company related to the API key is used.
 
 Fields: applications, detailed, employees, news, newsfull, profile, stock, timestamp
     """
-    fields = fields or []
-    params = {
-      "key": self.__key,
-      "selections": ",".join(fields),
-    }
-    url = "{}/company/".format(self.__base_url)
-    if company_id:
-      url += company_id
-    resp = requests.get(url, params=params)
-    return resp.json()
+    return self.__get("company", company_id, fields)
 
   def market(self, item_id=None, fields=None):
     """Fetch item market information.
 
 Fields: bazaar, itemmarket, pointsmarket, timestamp
     """
-    fields = fields or []
-    params = {
-      "key": self.__key,
-      "selections": ",".join(fields),
-    }
-    url = "{}/market/".format(self.__base_url)
-    if item_id:
-      url += item_id
-    resp = requests.get(url, params=params)
-    return resp.json()
+    return self.__get("market", item_id, fields)
 
   def torn(self, fields, user_id=None):
     """Fetch TORN information.
@@ -120,12 +67,20 @@ Fields: bank, cards, companies, competition, education, factiontree, gyms, honor
 logcategories, logtypes, medals, organisedcrimes, pawnshop, properties, rackets, raids, stats,
 stocks, territory, territorywars, timestamp
     """
+    return self.__get("torn", user_id, fields)
+
+  def __get(self, name, id=None, fields=None, since=None, until=None):
+    fields = fields or []
     params = {
       "key": self.__key,
-      "selections": ",".join(fields),
+      "selections": fields if isinstance(fields, str) else ",".join(fields),
     }
-    url = "{}/torn/".format(self.__base_url)
-    if user_id:
-      url += user_id
+    if since:
+      params["from"] = str(int(since))
+    if until:
+      params["to"] = str(int(until))
+    url = "{}/{}/".format(self.__base_url, name)
+    if id:
+      url += id
     resp = requests.get(url, params=params)
     return resp.json()
