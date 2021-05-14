@@ -110,3 +110,22 @@ Fields: bazaar, itemmarket, pointsmarket, timestamp
       url += item_id
     resp = requests.get(url, params=params)
     return resp.json()
+
+  def torn(self, fields, user_id=None):
+    """Fetch TORN information.
+
+If user ID is unspecified, the user related to the API key is used.
+
+Fields: bank, cards, companies, competition, education, factiontree, gyms, honors, items,
+logcategories, logtypes, medals, organisedcrimes, pawnshop, properties, rackets, raids, stats,
+stocks, territory, territorywars, timestamp
+    """
+    params = {
+      "key": self.__key,
+      "selections": ",".join(fields),
+    }
+    url = "{}/torn/".format(self.__base_url)
+    if user_id:
+      url += user_id
+    resp = requests.get(url, params=params)
+    return resp.json()
