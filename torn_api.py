@@ -31,3 +31,21 @@ refills, reports, revives, revivesfull, skills, stocks, timestamp, travel, weapo
       url += user_id
     resp = requests.get(url, params=params)
     return resp.json()
+
+  def property(self, property_id=None, fields=None):
+    """Fetch property information.
+
+If property ID is unspecified, the property related to the API key is used.
+
+Fields: property, timestamp
+  """
+    fields = fields or []
+    params = {
+      "key": self.__key,
+      "selections": ",".join(fields),
+    }
+    url = "{}/property/".format(self.__base_url)
+    if property_id:
+      url += property_id
+    resp = requests.get(url, params=params)
+    return resp.json()
