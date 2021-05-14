@@ -76,3 +76,21 @@ upgrades, weapons
       url += faction_id
     resp = requests.get(url, params=params)
     return resp.json()
+
+  def company(self, company_id=None, fields=None):
+    """Fetch company information.
+
+If company ID is unspecified, the company related to the API key is used.
+
+Fields: applications, detailed, employees, news, newsfull, profile, stock, timestamp
+    """
+    fields = fields or []
+    params = {
+      "key": self.__key,
+      "selections": ",".join(fields),
+    }
+    url = "{}/company/".format(self.__base_url)
+    if company_id:
+      url += company_id
+    resp = requests.get(url, params=params)
+    return resp.json()
