@@ -2,6 +2,8 @@ import requests
 
 class TornApi:
   def __init__(self, key):
+    if not isinstance(key, str):
+      raise Exception("API key must be a string! " + str(key))
     self.__base_url = "https://api.torn.com"
     self.__key = key
 
