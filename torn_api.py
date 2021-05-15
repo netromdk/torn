@@ -81,6 +81,6 @@ stocks, territory, territorywars, timestamp
       params["to"] = str(int(until))
     url = "{}/{}/".format(self.__base_url, name)
     if id:
-      url += id
+      url += str(id)
     resp = requests.get(url, params=params)
     return resp.json()
